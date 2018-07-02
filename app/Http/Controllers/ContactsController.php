@@ -26,6 +26,11 @@ class ContactsController extends Controller
 
         $contacts = Contact::where(function($query) use ($request) {
 
+            //Filter by selected group
+            if( ($group_id = $request->get("group_id") ) ) {
+                $query->where('group_id', $group_id);
+            }
+
             //Filter by keyword entered
             if(($term = $request->get('term'))) {
               $query->orWhere('name', 'like', '%' . $term . '%');
@@ -44,10 +49,6 @@ class ContactsController extends Controller
         //prevent this method called by non ajax
         if($request->ajax()) {
             $contacts = Contact::where(function($query) use ($request) {
-            //Filter by selected group
-              if( ($group_id = $request->get("group_id") ) ) {
-                $query->where('group_id', $group_id);
-              }
               //Filter by keyword entered
               if(($term = $request->get('term'))) {
                 $query->orWhere('name', 'like', '%' . $term . '%');
